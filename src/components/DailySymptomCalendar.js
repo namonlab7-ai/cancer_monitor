@@ -46,7 +46,7 @@ function DailySymptomCalendar({ userId }) {
   const [errors, setErrors] = useState({});
   const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
-  const sideEffectOptions = ['없음', '구토', '오심', '발열', '오한', '손발저림', '두통', '어지러움', '설사', '변비', '탈모', '발진', '가려움', '근육통', '피로', '식욕저하', '졸림'];
+  const sideEffectOptions = ['없음', '구토', '오심', '발열', '오한', '손발저림', '두통', '어지러움', '설사', '변비', '복통', '복부팽만', '탈모', '발진', '가려움', '근육통', '피로', '식욕저하', '졸림'];
   const bowelConditionOptions = ['정상', '설사', '묽은변', '딱딱한변', '혈변'];
 
   // Bottom sheet options
