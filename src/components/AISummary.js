@@ -230,6 +230,18 @@ function AISummary({ userId }) {
   const [aiLoading, setAiLoading] = useState(false);
   const [showDailyRecords, setShowDailyRecords] = useState(false);
 
+  // 마크다운 bold(**text**)를 HTML로 변환
+  const renderBoldText = (text) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={index}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
   // AI 분석 내용에서 이전 비교 부분을 분리해서 렌더링
   const renderAIContent = (text) => {
     if (!text) return null;
@@ -238,7 +250,7 @@ function AISummary({ userId }) {
     const markerIndex = text.indexOf(comparisonMarker);
 
     if (markerIndex === -1) {
-      return <div>{text}</div>;
+      return <div>{renderBoldText(text)}</div>;
     }
 
     const currentPart = text.substring(0, markerIndex).trim();
@@ -246,10 +258,10 @@ function AISummary({ userId }) {
 
     return (
       <>
-        <div className="ai-current-analysis">{currentPart}</div>
+        <div className="ai-current-analysis">{renderBoldText(currentPart)}</div>
         <div className="ai-comparison-section">
           <div className="ai-comparison-header">📊 이전 비교</div>
-          <div className="ai-comparison-content">{comparisonPart}</div>
+          <div className="ai-comparison-content">{renderBoldText(comparisonPart)}</div>
         </div>
       </>
     );
@@ -445,7 +457,7 @@ function AISummary({ userId }) {
         exercise: ERROR_MESSAGE,
         bowel: ERROR_MESSAGE,
         special: ERROR_MESSAGE,
-        comment: `오류 메시지: ${error.message}\n\nAPI 키를 확인하거나 나중에 다시 시도해주세요.`
+        comment: `오류 메시지: ${error.message}\n\nAPI 키 또는 모델 설정을 확인하거나 나중에 다시 시도해주세요.`
       });
     } finally {
       setAiLoading(false);
@@ -570,7 +582,14 @@ function AISummary({ userId }) {
                     {/* AI 코멘트 */}
                     <div style={{ marginBottom: '20px' }}>
                       <div className="ai-comment-header">💬 AI 코멘트 (참고용)</div>
-                      <div className="ai-comment-content">{aiSummary.comment}</div>
+                      <div className="ai-comment-content">
+                        {aiSummary.comment?.split('\n').map((line, idx) => (
+                          <span key={idx}>
+                            {renderBoldText(line)}
+                            {idx < aiSummary.comment.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
                     {/* 주의 문구 */}
