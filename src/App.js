@@ -4,11 +4,13 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Auth from './components/Auth';
 import InstallBanner from './components/InstallBanner';
 import DailySymptomCalendar from './components/DailySymptomCalendar';
+import MedicationList from './components/MedicationList';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('symptoms');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -41,11 +43,16 @@ function App() {
     return <Auth />;
   }
 
+  const tabs = [
+    { id: 'symptoms', label: '증상 기록', icon: '📋' },
+    { id: 'medication', label: '약물 관리', icon: '💊' }
+  ];
+
   return (
     <div className="App">
       <header className="app-header">
         <div className="app-header-content">
-          <h1>항암기록관리 - 증상</h1>
+          <h1>항암기록관리</h1>
           <div className="user-info">
             <span className="user-email">{user.email}</span>
             <button className="logout-button" onClick={handleLogout}>
@@ -55,9 +62,24 @@ function App() {
         </div>
       </header>
 
+      {/* 탭 네비게이션 */}
+      <nav className="tab-navigation">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="tab-icon">{tab.icon}</span>
+            <span className="tab-label">{tab.label}</span>
+          </button>
+        ))}
+      </nav>
+
       <main className="app-content">
         <InstallBanner />
-        <DailySymptomCalendar userId={user.uid} />
+        {activeTab === 'symptoms' && <DailySymptomCalendar userId={user.uid} />}
+        {activeTab === 'medication' && <MedicationList userId={user.uid} />}
       </main>
     </div>
   );

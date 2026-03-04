@@ -159,12 +159,63 @@ body {
   stroke: #5f27cd;
 }
 
+/* 탭 네비게이션 */
+.tab-navigation {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  z-index: 99;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #718096;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+  color: #667eea;
+  background: #f7fafc;
+}
+
+.tab-button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+  background: linear-gradient(180deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
+}
+
+.tab-icon {
+  font-size: 18px;
+}
+
+.tab-label {
+  font-size: 14px;
+}
+
 .app-content {
   flex: 1;
   max-width: 480px;
   width: 100%;
   margin: 0 auto;
-  padding: 90px 15px 80px 15px; /* 상단 헤더 + 하단 탭바 공간 확보 */
+  padding: 130px 15px 80px 15px; /* 상단 헤더 + 탭 + 하단 탭바 공간 확보 */
 }
 
 @media (max-width: 768px) {
@@ -204,7 +255,24 @@ body {
   }
 
   .app-content {
-    padding: 80px 10px 80px 10px;
+    padding: 120px 10px 80px 10px;
+  }
+
+  .tab-navigation {
+    top: 56px;
+  }
+
+  .tab-button {
+    padding: 12px 12px;
+    gap: 6px;
+  }
+
+  .tab-icon {
+    font-size: 16px;
+  }
+
+  .tab-label {
+    font-size: 13px;
   }
 
   .bottom-nav-item {

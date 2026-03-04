@@ -1,0 +1,702 @@
+.medication-list {
+  background-color: white;
+  padding: 20px 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.medication-list h2 {
+  color: #1a202c;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.add-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  width: 100%;
+}
+
+.add-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.add-button:active {
+  transform: translateY(0);
+}
+
+.medication-form {
+  background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.medication-form h3 {
+  color: #1a202c;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 수동 입력 모드 토글 */
+.mode-toggle {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: #f7fafc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-label input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  width: 44px;
+  height: 24px;
+  background: #cbd5e0;
+  border-radius: 12px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.toggle-slider::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-label input:checked + .toggle-slider {
+  background: #667eea;
+}
+
+.toggle-label input:checked + .toggle-slider::after {
+  transform: translateX(20px);
+}
+
+.toggle-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.mode-hint {
+  font-size: 12px;
+  color: #718096;
+  background: #edf2f7;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* 자동완성 */
+.autocomplete-wrapper {
+  position: relative;
+}
+
+.search-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.api-hint {
+  font-size: 11px;
+  color: #a0aec0;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.api-error {
+  display: block;
+  font-size: 12px;
+  color: #e53e3e;
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #fff5f5;
+  border-radius: 6px;
+  border: 1px solid #fed7d7;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f4f8;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+}
+
+.dropdown-item .drug-name {
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 14px;
+}
+
+.dropdown-item .drug-manufacturer {
+  font-size: 12px;
+  color: #718096;
+}
+
+/* 약물 정보 미리보기 */
+.drug-info-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f7fafc;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.drug-info-preview {
+  background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 100%);
+  border: 1px solid #90cdf4;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.drug-info-preview h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2c5282;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drug-info-preview h4::before {
+  content: '💊';
+}
+
+.info-section {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(144, 205, 244, 0.3);
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.info-section label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2b6cb0;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-section p {
+  font-size: 13px;
+  color: #2d3748;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-section.warning {
+  background: #fffaf0;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #fbd38d;
+}
+
+.info-section.warning label {
+  color: #c05621;
+}
+
+/* DUR 경고 */
+.dur-warnings {
+  background: linear-gradient(135deg, #fff5f5 0%, #fffaf0 100%);
+  border: 2px solid #fc8181;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.dur-warnings h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #c53030;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dur-warnings h4::before {
+  content: '⚠️';
+}
+
+.dur-warning-item {
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  border-left: 4px solid #ed8936;
+}
+
+.dur-warning-item:last-child {
+  margin-bottom: 0;
+}
+
+.dur-warning-item.severe {
+  border-left-color: #e53e3e;
+  background: #fff5f5;
+}
+
+.warning-type {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  background: #ed8936;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dur-warning-item.severe .warning-type {
+  background: #e53e3e;
+}
+
+.warning-content {
+  font-size: 13px;
+  color: #2d3748;
+  line-height: 1.5;
+  margin: 0 0 6px 0;
+}
+
+.warning-detail {
+  font-size: 12px;
+  color: #718096;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 카드 내 DUR 경고 배지 */
+.dur-row {
+  margin-top: 8px;
+}
+
+.dur-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dur-badge {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%) !important;
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+}
+
+/* 수동입력 배지 */
+.manual-badge {
+  display: inline-block;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: #718096 !important;
+  background: #edf2f7 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* 효능/부작용 텍스트 */
+.efficacy-text,
+.side-effects-text {
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.side-effects-text {
+  color: #c53030 !important;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+}
+
+.submit-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.35);
+}
+
+.cancel-button {
+  background-color: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+}
+
+.cancel-button:hover {
+  background-color: #cbd5e0;
+  transform: translateY(-1px);
+}
+
+/* 카드 컨테이너 */
+.medication-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 약물 카드 */
+.medication-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid #f0f4f8;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.medication-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+.medication-card.dragging {
+  opacity: 0.6;
+  transform: scale(0.98);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.medication-card.drag-over {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+  border-style: dashed;
+}
+
+/* 드래그 핸들 */
+.drag-handle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #cbd5e0;
+  cursor: grab;
+  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 8px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+
+.drag-handle:hover {
+  color: #667eea;
+  background: #f0f4f8;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  color: #667eea;
+  background: #e2e8f0;
+}
+
+/* 카드 컨텐츠 */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-right: 40px;
+}
+
+.card-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-row label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-row span {
+  font-size: 15px;
+  color: #2d3748;
+  line-height: 1.5;
+}
+
+.medication-name {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #1a202c !important;
+}
+
+/* 카드 액션 버튼 */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+}
+
+.edit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(245, 101, 101, 0.3);
+}
+
+.delete-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #718096;
+}
+
+.empty-state svg {
+  color: #cbd5e0;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.empty-subtitle {
+  font-size: 14px !important;
+  color: #a0aec0 !important;
+  font-weight: 400 !important;
+}
+
+/* 폼 그룹 */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #fc8181;
+}
+
+.error-message {
+  color: #f56565;
+  font-size: 13px;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+}
+
+.required {
+  color: #f56565;
+}
+
+/* 애니메이션 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.medication-card {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .mode-toggle {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .autocomplete-dropdown {
+    max-height: 200px;
+  }
+
+  .drug-info-preview,
+  .dur-warnings {
+    padding: 16px;
+  }
+
+  .dur-warning-item {
+    padding: 12px;
+  }
+}
